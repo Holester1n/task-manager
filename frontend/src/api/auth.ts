@@ -10,3 +10,8 @@ export const login = async (email: string, password: string): Promise<Token> => 
   const response = await client.post("/users/login", { name: "", email, password })
   return response.data
 }
+
+export const getMe = async (): Promise<User> => {
+  const response = await client.get("/users/me")
+  return response.data
+}

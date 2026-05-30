@@ -47,10 +47,14 @@ export default function ChangesPage() {
   return (
     <div>
       <h1>Изменения</h1>
-      <button onClick={() => navigate("/changes/new")}>+ Добавить</button>
-      <button onClick={() => { localStorage.removeItem("token"); navigate("/login") }}>
-        Выйти
-      </button>
+      <div style={{ display: "flex", gap: "8px" }}>
+            <button onClick={() => navigate("/systems")}>Системы</button>
+            <button onClick={() => navigate("/changes/new")}>+ Добавить</button>
+            <button onClick={() => {
+                localStorage.removeItem("token")
+                navigate("/login")
+            }}>Выйти</button>
+        </div>
 
       {changes.length === 0 && <p>Изменений пока нет</p>}
 

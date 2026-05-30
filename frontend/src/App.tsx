@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import LoginPage from "./pages/LoginPage"
 import ChangesPage from "./pages/ChangesPage"
 import NewChangePage from "./pages/NewChangePage"
+import SystemsPage from "./pages/SystemsPage"
 
 function App() {
   const token = localStorage.getItem("token")
@@ -12,6 +13,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/changes" element={<ChangesPage />} />
         <Route path="/changes/new" element={<NewChangePage />} />
+        <Route path="/systems" element={<SystemsPage />} />
         <Route path="*" element={<Navigate to={token ? "/changes" : "/login"} />} />
       </Routes>
     </BrowserRouter>

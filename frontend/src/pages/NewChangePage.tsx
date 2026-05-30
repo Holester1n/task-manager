@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { createChange } from "../api/changes"
 import { getSystems, getSegments } from "../api/systems"
+import { useCurrentUser } from "../hooks/useCurrentUser"
 import type { System, Segment } from "../types"
 
 export default function NewChangePage() {
@@ -14,6 +15,7 @@ export default function NewChangePage() {
   const [segments, setSegments] = useState<Segment[]>([])
   const [error, setError] = useState("")
   const navigate = useNavigate()
+  const currentUser = useCurrentUser()
 
   useEffect(() => {
     getSystems().then(setSystems)
@@ -51,6 +53,7 @@ export default function NewChangePage() {
   return (
     <div style={{ padding: "20px", maxWidth: "600px" }}>
       <h1>Новое изменение</h1>
+      {currentUser && <p style={{ color: "#666" }}>Ответственный: {currentUser.name}</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
