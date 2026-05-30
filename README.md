@@ -60,14 +60,14 @@ source .venv/Scripts/activate
 pip install -r requirements.txt
 ```
 
-Создай файл `backend/.env`:
+Создайте файл `backend/.env`:
 ```
 DATABASE_URL=postgresql://postgres:ПАРОЛЬ@localhost:5432/ИМЯ_БД
 SECRET_KEY=придумай_длинную_случайную_строку
 TELEGRAM_BOT_TOKEN=токен_от_botfather
 ```
 
-Создай базу данных в PostgreSQL:
+Создайте базу данных в PostgreSQL:
 ```bash
 psql -U postgres
 CREATE DATABASE changetracker;
@@ -81,7 +81,7 @@ uvicorn main:app --reload
 
 Swagger документация: `http://localhost:8000/docs`
 
-Запуск Telegram бота (в отдельном терминале):
+Запустите Telegram бота (в отдельном терминале):
 ```bash
 python bot.py
 ```
@@ -94,16 +94,16 @@ npm install
 npm run dev
 ```
 
-Открой `http://localhost:5173`
+Откройте `http://localhost:5173`
 
 ## Подключение Telegram уведомлений
 
-1. Найди бота в Telegram и напиши `/start`
-2. Бот пришлёт твой `chat_id`
-3. Отправь запрос на привязку:
+1. Найдите бота в Telegram и выполните `/start`
+2. Бот пришлёт ваш `chat_id`
+3. Отправьте запрос на привязку:
 ```bash
-curl -X POST "http://localhost:8000/users/telegram/connect?chat_id=ТУТ_ТВОЙ_ID" \
-  -H "Authorization: Bearer ТУТ_ТВОЙ_JWT_ТОКЕН"
+curl -X POST "http://localhost:8000/users/telegram/connect?chat_id=ТУТ_ВАШ_ID" \
+  -H "Authorization: Bearer ТУТ_ВАШ_JWT_ТОКЕН"
 ```
 
 После этого при каждом изменении статуса будет приходить уведомление в Telegram.
