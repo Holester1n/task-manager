@@ -1,15 +1,19 @@
 from fastapi import APIRouter, Depends, HTTPException, Header
 from sqlalchemy.orm import Session
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from database import get_db
 from models import User
 from schemas import UserCreate, UserResponse, Token
 from auth import hash_password, verify_password, create_access_token, decode_token
 
 router = APIRouter(prefix="/users", tags=["users"])
+security = HTTPBearer()
 
-def get_current_user(authorization: str = Header(...), db: Session = Depends(get_db)):
-    token = authorization.replace("Bearer ", "")
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security), db: Session = Depends(get_db)):
+    token = credentials.credentials
+    print(f"TOKEN: {token}")
     payload = decode_token(token)
+    print(f"PAYLOAD: {payload}")
     if not payload:
         raise HTTPException(status_code=401, detail="Недействительный токен")
     user = db.query(User).filter(User.id == int(payload["sub"])).first()
@@ -43,3 +47,10 @@ def login(user: UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=401, detail="Неверный email или пароль")
     token = create_access_token({"sub": str(db_user.id)})
     return {"access_token": token, "token_type": "bearer"}
+
+@router.post("/telegram/connect")
+def connect_telegram(chat_id: str, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.id == current_user.id).first()
+    db_user.telegram_chat_id = chat_id
+    db.commit()
+    return {"message": "Telegram подключён"}

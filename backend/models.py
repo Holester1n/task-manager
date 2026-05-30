@@ -18,6 +18,7 @@ class User(Base):
     name = Column(String(100), nullable=False)
     email = Column(String(200), unique=True, nullable=False)
     password_hash = Column(String(200), nullable=False)
+    telegram_chat_id = Column(String(50), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
 class System(Base):
