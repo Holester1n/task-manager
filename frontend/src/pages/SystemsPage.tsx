@@ -42,50 +42,116 @@ export default function SystemsPage() {
   }
 
   return (
-    <div style={{ padding: "20px", maxWidth: "700px" }}>
-      <button onClick={() => navigate("/changes")}>← Назад</button>
-      <h1>Системы</h1>
+  <div className="min-h-screen bg-gray-950 text-white">
+    <div className="max-w-4xl mx-auto px-4 py-8">
 
-      <div style={{ border: "1px solid #ddd", borderRadius: "8px", padding: "16px", marginBottom: "24px" }}>
-        <h3>Новая система</h3>
-        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-2xl font-bold">Системы</h1>
+
+        <button
+          onClick={() => navigate("/changes")}
+          className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm transition"
+        >
+          ← Назад
+        </button>
+      </div>
+
+      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-6">
+        <h2 className="text-lg font-semibold mb-4">
+          Новая система
+        </h2>
+
+        <div className="flex flex-col gap-4">
           <input
             placeholder="Название *"
             value={newSystemName}
             onChange={(e) => setNewSystemName(e.target.value)}
+            className="bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500"
           />
+
           <input
             placeholder="Описание"
             value={newSystemDesc}
             onChange={(e) => setNewSystemDesc(e.target.value)}
+            className="bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500"
           />
-          <button onClick={handleCreateSystem}>Создать систему</button>
+
+          <div>
+            <button
+              onClick={handleCreateSystem}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium transition"
+            >
+              Создать систему
+            </button>
+          </div>
         </div>
       </div>
 
-      {systems.map((system) => (
-        <div key={system.id} style={{ border: "1px solid #ddd", borderRadius: "8px", padding: "16px", marginBottom: "12px" }}>
-          <h3>{system.name}</h3>
-          {system.description && <p style={{ color: "#666" }}>{system.description}</p>}
+      <div className="flex flex-col gap-4">
+        {systems.map((system) => (
+          <div
+            key={system.id}
+            className="bg-gray-900 border border-gray-800 rounded-xl p-5"
+          >
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold">
+                {system.name}
+              </h3>
 
-          <h4>Сегменты:</h4>
-          {(segments[system.id] || []).length === 0 && <p style={{ color: "#999" }}>Нет сегментов</p>}
-          {(segments[system.id] || []).map((seg) => (
-            <div key={seg.id} style={{ padding: "4px 8px", background: "#f5f5f5", borderRadius: "4px", marginBottom: "4px" }}>
-              {seg.name}
+              {system.description && (
+                <p className="text-sm text-gray-400 mt-1">
+                  {system.description}
+                </p>
+              )}
             </div>
-          ))}
 
-          <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
-            <input
-              placeholder="Новый сегмент"
-              value={newSegmentName[system.id] || ""}
-              onChange={(e) => setNewSegmentName(prev => ({ ...prev, [system.id]: e.target.value }))}
-            />
-            <button onClick={() => handleCreateSegment(system.id)}>+</button>
+            <div className="mb-4">
+              <h4 className="text-sm font-medium text-gray-300 mb-2">
+                Сегменты
+              </h4>
+
+              {(segments[system.id] || []).length === 0 ? (
+                <p className="text-sm text-gray-500">
+                  Нет сегментов
+                </p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {(segments[system.id] || []).map((seg) => (
+                    <div
+                      key={seg.id}
+                      className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-sm"
+                    >
+                      {seg.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-3">
+              <input
+                placeholder="Новый сегмент"
+                value={newSegmentName[system.id] || ""}
+                onChange={(e) =>
+                  setNewSegmentName((prev) => ({
+                    ...prev,
+                    [system.id]: e.target.value,
+                  }))
+                }
+                className="flex-1 bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500"
+              />
+
+              <button
+                onClick={() => handleCreateSegment(system.id)}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium transition"
+              >
+                Добавить
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
+
     </div>
-  )
-}
+  </div>
+)}

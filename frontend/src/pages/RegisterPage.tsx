@@ -25,30 +25,53 @@ export default function RegisterPage() {
   }
 
   return (
-    <div style={{ padding: "20px", maxWidth: "400px" }}>
-      <h1>Регистрация</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 w-full max-w-md">
+        <h1 className="text-2xl font-bold text-white mb-2">Регистрация</h1>
+        <p className="text-gray-400 mb-6">Change Tracker</p>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-        <input
-          placeholder="Имя"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Пароль"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button onClick={handleSubmit}>Зарегистрироваться</button>
-        <button onClick={() => navigate("/login")}>Уже есть аккаунт → Войти</button>
+        {error && (
+          <div className="bg-red-500/10 border border-red-500/30 text-red-400 rounded-lg px-4 py-3 mb-4 text-sm">
+            {error}
+          </div>
+        )}
+
+        <div className="flex flex-col gap-4">
+          <input
+            placeholder="Имя"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-3 outline-none focus:border-blue-500 transition"
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-3 outline-none focus:border-blue-500 transition"
+          />
+          <input
+            type="password"
+            placeholder="Пароль"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-3 outline-none focus:border-blue-500 transition"
+          />
+          <button
+            type="button"
+            onClick={handleSubmit}
+            className="bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg py-3 transition"
+          >
+            Зарегистрироваться
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate("/login")}
+            className="text-gray-400 hover:text-white text-sm transition"
+          >
+            Уже есть аккаунт? Войти
+          </button>
+        </div>
       </div>
     </div>
   )

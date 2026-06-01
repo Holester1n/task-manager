@@ -35,6 +35,7 @@ export default function NewChangePage() {
       setError("Заполните название и систему")
       return
     }
+
     try {
       await createChange({
         title,
@@ -44,6 +45,7 @@ export default function NewChangePage() {
         responsible_id: 1,
         planned_at: plannedAt || undefined,
       })
+
       navigate("/changes")
     } catch {
       setError("Ошибка при создании")
@@ -51,56 +53,111 @@ export default function NewChangePage() {
   }
 
   return (
-    <div style={{ padding: "20px", maxWidth: "600px" }}>
-      <h1>Новое изменение</h1>
-      {currentUser && <p style={{ color: "#666" }}>Ответственный: {currentUser.name}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="min-h-screen bg-gray-950 text-white">
+      <div className="max-w-2xl mx-auto px-4 py-8">
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-        <input
-          placeholder="Название *"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-2xl font-bold">Новое изменение</h1>
 
-        <textarea
-          placeholder="Описание"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          rows={3}
-        />
-
-        <select
-          value={systemId ?? ""}
-          onChange={(e) => setSystemId(Number(e.target.value) || null)}
-        >
-          <option value="">Выберите систему *</option>
-          {systems.map((s) => (
-            <option key={s.id} value={s.id}>{s.name}</option>
-          ))}
-        </select>
-
-        {segments.length > 0 && (
-          <select
-            value={segmentId ?? ""}
-            onChange={(e) => setSegmentId(Number(e.target.value) || null)}
+          <button
+            onClick={() => navigate("/changes")}
+            className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm transition"
           >
-            <option value="">Выберите сегмент</option>
-            {segments.map((s) => (
-              <option key={s.id} value={s.id}>{s.name}</option>
-            ))}
-          </select>
-        )}
+            Назад
+          </button>
+        </div>
 
-        <input
-          type="datetime-local"
-          value={plannedAt}
-          onChange={(e) => setPlannedAt(e.target.value)}
-        />
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
 
-        <div style={{ display: "flex", gap: "8px" }}>
-          <button onClick={handleSubmit}>Создать</button>
-          <button onClick={() => navigate("/changes")}>Отмена</button>
+          {currentUser && (
+            <div className="mb-6">
+              <p className="text-sm text-gray-400">
+                Ответственный:
+                <span className="text-white ml-2 font-medium">
+                  {currentUser.name}
+                </span>
+              </p>
+            </div>
+          )}
+
+          {error && (
+            <div className="mb-6 rounded-lg border border-red-900 bg-red-950/40 px-4 py-3 text-sm text-red-400">
+              {error}
+            </div>
+          )}
+
+          <div className="flex flex-col gap-4">
+
+            <input
+              type="text"
+              placeholder="Название *"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500"
+            />
+
+            <textarea
+              placeholder="Описание"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={4}
+              className="bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none resize-none focus:border-blue-500"
+            />
+
+            <select
+              value={systemId ?? ""}
+              onChange={(e) => setSystemId(Number(e.target.value) || null)}
+              className="bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500"
+            >
+              <option value="">Выберите систему *</option>
+
+              {systems.map((system) => (
+                <option key={system.id} value={system.id}>
+                  {system.name}
+                </option>
+              ))}
+            </select>
+
+            {segments.length > 0 && (
+              <select
+                value={segmentId ?? ""}
+                onChange={(e) => setSegmentId(Number(e.target.value) || null)}
+                className="bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500"
+              >
+                <option value="">Выберите сегмент</option>
+
+                {segments.map((segment) => (
+                  <option key={segment.id} value={segment.id}>
+                    {segment.name}
+                  </option>
+                ))}
+              </select>
+            )}
+
+            <input
+              type="datetime-local"
+              value={plannedAt}
+              onChange={(e) => setPlannedAt(e.target.value)}
+              className="bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500"
+            />
+
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={handleSubmit}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium transition"
+              >
+                Создать изменение
+              </button>
+
+              <button
+                onClick={() => navigate("/changes")}
+                className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm transition"
+              >
+                Отмена
+              </button>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
