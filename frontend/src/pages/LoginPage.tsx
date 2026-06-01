@@ -23,21 +23,24 @@ export default function LoginPage() {
     <div>
       <h1>Вход</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
+      <div style={{ display: "flex", gap: "12px" }}>
         <input
           type="email"
           placeholder="Email"
           value={email}
+          
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="password"
           placeholder="Пароль"
           value={password}
+          
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit">Войти</button>
-      </form>
+        <button type="button" onClick={handleSubmit}>Войти</button>
+        <button type="button" onClick={() => navigate("/register")}>Нет аккаунта → Зарегистрироваться</button>
+      </div>
     </div>
   )
 }
