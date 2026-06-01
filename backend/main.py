@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from database import engine
 from models import Base
-from routers import users, systems, changes
+from routers import users, systems, changes, subscriptions
 
 Base.metadata.create_all(bind=engine)
 
@@ -20,6 +20,7 @@ app.add_middleware(
 app.include_router(users.router)
 app.include_router(systems.router)
 app.include_router(changes.router)
+app.include_router(subscriptions.router)
 
 def custom_openapi():
     if app.openapi_schema:

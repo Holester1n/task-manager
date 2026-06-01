@@ -20,3 +20,16 @@ export const createSegment = async (system_id: number, name: string): Promise<Se
   const response = await client.post(`/systems/${system_id}/segments`, { name, system_id })
   return response.data
 }
+
+export const getSubscriptions = async (): Promise<{ subscribed_system_ids: number[] }> => {
+  const response = await client.get("/subscriptions/")
+  return response.data
+}
+
+export const subscribe = async (system_id: number): Promise<void> => {
+  await client.post(`/subscriptions/${system_id}`)
+}
+
+export const unsubscribe = async (system_id: number): Promise<void> => {
+  await client.delete(`/subscriptions/${system_id}`)
+}

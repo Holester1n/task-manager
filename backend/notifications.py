@@ -1,22 +1,27 @@
 import os
-from telegram import Bot
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-bot = Bot(token=TELEGRAM_BOT_TOKEN)
+TELEGRAM_API_URL = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
 
-async def send_telegram(chat_id: str, message: str):
+def notify(chat_id: str, message: str):
     try:
-        await bot.send_message(chat_id=chat_id, text=message)
+        requests.post(f"{TELEGRAM_API_URL}/sendMessage", json={
+            "chat_id": chat_id,
+            "text": message,
+            "parse_mode": "Markdown"
+        })
     except Exception as e:
-        print(f"Ошибка отправки уведомления: {e}")
+        print(f"Ошибка уведомления: {e}")
 
-def format_change_message(action: str, title: str, status: str, responsible: str) -> str:
+def format_change_message(action: str, title: str, status: str, responsible: str, system: str) -> str:
     return (
         f"🔔 *Изменение {action}*\n\n"
         f"📋 *{title}*\n"
+        f"🖥 Система: {system}\n"
         f"📊 Статус: {status}\n"
         f"👤 Ответственный: {responsible}\n"
     )

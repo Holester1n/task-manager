@@ -19,6 +19,7 @@ class UserResponse(BaseModel):
     id: int
     name: str
     email: str
+    telegram_chat_id: Optional[str] = None
     created_at: datetime
 
     class Config:

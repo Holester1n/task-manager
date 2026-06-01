@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { getSystems, createSystem, getSegments, createSegment } from "../api/systems"
 import type { System, Segment } from "../types"
 
@@ -8,6 +9,7 @@ export default function SystemsPage() {
   const [newSystemName, setNewSystemName] = useState("")
   const [newSystemDesc, setNewSystemDesc] = useState("")
   const [newSegmentName, setNewSegmentName] = useState<Record<number, string>>({})
+  const navigate = useNavigate()
 
   useEffect(() => {
     loadSystems()
@@ -41,6 +43,7 @@ export default function SystemsPage() {
 
   return (
     <div style={{ padding: "20px", maxWidth: "700px" }}>
+      <button onClick={() => navigate("/changes")}>← Назад</button>
       <h1>Системы</h1>
 
       <div style={{ border: "1px solid #ddd", borderRadius: "8px", padding: "16px", marginBottom: "24px" }}>

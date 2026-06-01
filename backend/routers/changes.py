@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import get_db
-from models import Change, ChangeStatus, User
+from models import Change, ChangeStatus, User, System, Subscription
 from schemas import ChangeCreate, ChangeUpdate, ChangeResponse
-from notifications import send_telegram, format_change_message
+from notifications import format_change_message, notify
 from datetime import datetime
 import asyncio
 
@@ -18,15 +18,39 @@ STATUS_LABELS = {
 }
 
 def notify_responsible(db: Session, change: Change, action: str):
-    user = db.query(User).filter(User.id == change.responsible_id).first()
-    if user and user.telegram_chat_id:
+    system = db.query(System).filter(System.id == change.system_id).first()
+    system_name = system.name if system else "Неизвестно"
+
+    subscriptions = db.query(Subscription).filter(
+        Subscription.system_id == change.system_id
+    ).all()
+
+    notified_ids = set()
+
+    for sub in subscriptions:
+        user = db.query(User).filter(User.id == sub.user_id).first()
+        if user and user.telegram_chat_id and user.id not in notified_ids:
+            message = format_change_message(
+                action=action,
+                title=change.title,
+                status=STATUS_LABELS.get(change.status.value, change.status.value),
+                responsible=user.name,
+                system=system_name
+            )
+            notify(user.telegram_chat_id, message)
+            notified_ids.add(user.id)
+
+    responsible = db.query(User).filter(User.id == change.responsible_id).first()
+    if responsible and responsible.telegram_chat_id and responsible.id not in notified_ids:
         message = format_change_message(
             action=action,
             title=change.title,
             status=STATUS_LABELS.get(change.status.value, change.status.value),
-            responsible=user.name
+            responsible=responsible.name,
+            system=system_name
         )
-        asyncio.run(send_telegram(user.telegram_chat_id, message))
+        notify(responsible.telegram_chat_id, message)
+
 
 @router.get("/", response_model=list[ChangeResponse])
 def get_changes(

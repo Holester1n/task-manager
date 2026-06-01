@@ -9,6 +9,7 @@ export interface User {
   id: number
   name: string
   email: string
+  telegram_chat_id: string | null
   created_at: string
 }
 
