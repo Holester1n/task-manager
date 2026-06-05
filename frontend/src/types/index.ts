@@ -23,6 +23,8 @@ export interface Segment {
   id: number
   name: string
   system_id: number
+  description: string | null
+  requires_restart: boolean
 }
 
 export interface Change {

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Enum
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Enum, Boolean
 from sqlalchemy.orm import relationship, declarative_base
 from datetime import datetime
 import enum
@@ -28,13 +28,6 @@ class System(Base):
     description = Column(Text)
     segments = relationship("Segment", back_populates="system")
 
-class Segment(Base):
-    __tablename__ = "segments"
-    id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False)
-    system_id = Column(Integer, ForeignKey("systems.id"), nullable=False)
-    system = relationship("System", back_populates="segments")
-
 class Change(Base):
     __tablename__ = "changes"
     id = Column(Integer, primary_key=True)
@@ -54,3 +47,12 @@ class Subscription(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     system_id = Column(Integer, ForeignKey("systems.id"), nullable=False)
+
+class Segment(Base):
+    __tablename__ = "segments"
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False)
+    description = Column(Text, nullable=True)
+    requires_restart = Column(Boolean, default=False)
+    system_id = Column(Integer, ForeignKey("systems.id"), nullable=False)
+    system = relationship("System", back_populates="segments")

@@ -44,11 +44,15 @@ class SystemResponse(BaseModel):
 class SegmentCreate(BaseModel):
     name: str
     system_id: int
+    description: Optional[str] = None
+    requires_restart: bool = False
 
 class SegmentResponse(BaseModel):
     id: int
     name: str
     system_id: int
+    description: Optional[str] = None
+    requires_restart: bool
 
     class Config:
         from_attributes = True

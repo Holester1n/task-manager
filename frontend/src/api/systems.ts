@@ -16,8 +16,8 @@ export const getSegments = async (system_id: number): Promise<Segment[]> => {
   return response.data
 }
 
-export const createSegment = async (system_id: number, name: string): Promise<Segment> => {
-  const response = await client.post(`/systems/${system_id}/segments`, { name, system_id })
+export const createSegment = async (system_id: number, name: string, description?: string, requires_restart?: boolean): Promise<Segment> => {
+  const response = await client.post(`/systems/${system_id}/segments`, { name, system_id, description, requires_restart })
   return response.data
 }
 
@@ -32,4 +32,22 @@ export const subscribe = async (system_id: number): Promise<void> => {
 
 export const unsubscribe = async (system_id: number): Promise<void> => {
   await client.delete(`/subscriptions/${system_id}`)
+}
+
+export const updateSystem = async (id: number, name: string, description?: string): Promise<System> => {
+  const response = await client.patch(`/systems/${id}`, { name, description })
+  return response.data
+}
+
+export const deleteSystem = async (id: number): Promise<void> => {
+  await client.delete(`/systems/${id}`)
+}
+
+export const updateSegment = async (system_id: number, segment_id: number, name: string, description?: string, requires_restart?: boolean): Promise<Segment> => {
+  const response = await client.patch(`/systems/${system_id}/segments/${segment_id}`, { name, system_id, description, requires_restart })
+  return response.data
+}
+
+export const deleteSegment = async (system_id: number, segment_id: number): Promise<void> => {
+  await client.delete(`/systems/${system_id}/segments/${segment_id}`)
 }
