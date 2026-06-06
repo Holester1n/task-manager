@@ -15,11 +15,16 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
 
+class UserRole(str, Enum):
+    admin = "admin"
+    user = "user"
+
 class UserResponse(BaseModel):
     id: int
     name: str
     email: str
     telegram_chat_id: Optional[str] = None
+    role: UserRole
     created_at: datetime
 
     class Config:

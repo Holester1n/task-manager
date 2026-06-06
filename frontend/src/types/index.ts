@@ -5,11 +5,14 @@ export type ChangeStatus =
   | "tested" 
   | "rolled_back"
 
+export type UserRole = "admin" | "user"
+
 export interface User {
   id: number
   name: string
   email: string
   telegram_chat_id: string | null
+  role: UserRole
   created_at: string
 }
 

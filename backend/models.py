@@ -12,6 +12,10 @@ class ChangeStatus(enum.Enum):
     tested = "tested"
     rolled_back = "rolled_back"
 
+class UserRole(enum.Enum):
+    admin = "admin"
+    user = "user"
+
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
@@ -19,6 +23,7 @@ class User(Base):
     email = Column(String(200), unique=True, nullable=False)
     password_hash = Column(String(200), nullable=False)
     telegram_chat_id = Column(String(50), nullable=True)
+    role = Column(Enum(UserRole), default=UserRole.user, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
 class System(Base):

@@ -54,3 +54,20 @@ def connect_telegram(chat_id: str, current_user: User = Depends(get_current_user
     db_user.telegram_chat_id = chat_id
     db.commit()
     return {"message": "Telegram подключён"}
+
+@router.patch("/users/{user_id}/role")
+def change_role(user_id: int, role: str, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if current_user.role.value != "admin":
+        raise HTTPException(status_code=403, detail="Недостаточно прав")
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Пользователь не найден")
+    user.role = role
+    db.commit()
+    return {"message": "Роль обновлена"}
+
+@router.get("/users/", response_model=list[UserResponse])
+def get_users(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if current_user.role.value != "admin":
+        raise HTTPException(status_code=403, detail="Недостаточно прав")
+    return db.query(User).all()

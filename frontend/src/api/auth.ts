@@ -15,3 +15,12 @@ export const getMe = async (): Promise<User> => {
   const response = await client.get("/users/me")
   return response.data
 }
+
+export const getUsers = async (): Promise<User[]> => {
+  const response = await client.get("/users/")
+  return response.data
+}
+
+export const changeRole = async (user_id: number, role: string): Promise<void> => {
+  await client.patch(`/users/${user_id}/role?role=${role}`)
+}
