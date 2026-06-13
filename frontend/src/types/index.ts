@@ -27,7 +27,6 @@ export interface Segment {
   name: string
   system_id: number
   description: string | null
-  requires_restart: boolean
 }
 
 export interface Change {
@@ -41,6 +40,7 @@ export interface Change {
   planned_at: string | null
   created_at: string
   updated_at: string
+  requires_restart: boolean
 }
 
 export interface Token {

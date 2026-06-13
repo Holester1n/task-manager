@@ -127,6 +127,12 @@ export default function ChangesPage() {
                 <p className="text-gray-400 text-sm mb-3">{change.description}</p>
               )}
 
+              {change.requires_restart && (
+                <span className="inline-flex items-center gap-1 text-xs text-orange-400 bg-orange-400/10 border border-orange-400/20 rounded-md px-2 py-1 mb-3">
+                  ⚠ Требуется перезагрузка
+                </span>
+              )}
+
               <div className="flex gap-2 mt-3">
                 <select
                   value={change.status}

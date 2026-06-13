@@ -14,6 +14,7 @@ export default function NewChangePage() {
   const [systems, setSystems] = useState<System[]>([])
   const [segments, setSegments] = useState<Segment[]>([])
   const [error, setError] = useState("")
+  const [requiresRestart, setRequiresRestart] = useState(false)
   const navigate = useNavigate()
   const currentUser = useCurrentUser()
 
@@ -44,6 +45,7 @@ export default function NewChangePage() {
         segment_id: segmentId || undefined,
         responsible_id: 1,
         planned_at: plannedAt || undefined,
+        requires_restart: requiresRestart
       })
 
       navigate("/changes")
@@ -140,6 +142,16 @@ export default function NewChangePage() {
               onChange={(e) => setPlannedAt(e.target.value)}
               className="bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500"
             />
+
+            <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={requiresRestart}
+                onChange={(e) => setRequiresRestart(e.target.checked)}
+                className="w-4 h-4"
+              />
+              Требуется перезагрузка
+            </label>
 
             <div className="flex gap-3 pt-2">
               <button

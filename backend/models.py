@@ -46,6 +46,7 @@ class Change(Base):
     applied_at = Column(DateTime)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    requires_restart = Column(Boolean, default=False)
 
 class Subscription(Base):
     __tablename__ = "subscriptions"
@@ -58,6 +59,5 @@ class Segment(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
     description = Column(Text, nullable=True)
-    requires_restart = Column(Boolean, default=False)
     system_id = Column(Integer, ForeignKey("systems.id"), nullable=False)
     system = relationship("System", back_populates="segments")

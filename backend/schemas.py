@@ -50,14 +50,12 @@ class SegmentCreate(BaseModel):
     name: str
     system_id: int
     description: Optional[str] = None
-    requires_restart: bool = False
 
 class SegmentResponse(BaseModel):
     id: int
     name: str
     system_id: int
     description: Optional[str] = None
-    requires_restart: bool
 
     class Config:
         from_attributes = True
@@ -69,6 +67,7 @@ class ChangeCreate(BaseModel):
     segment_id: Optional[int] = None
     responsible_id: int
     planned_at: Optional[datetime] = None
+    requires_restart: bool = False
 
 class ChangeUpdate(BaseModel):
     title: Optional[str] = None
@@ -77,6 +76,7 @@ class ChangeUpdate(BaseModel):
     segment_id: Optional[int] = None
     responsible_id: Optional[int] = None
     planned_at: Optional[datetime] = None
+    requires_restart: Optional[bool] = None
 
 class ChangeResponse(BaseModel):
     id: int
@@ -89,6 +89,7 @@ class ChangeResponse(BaseModel):
     planned_at: Optional[datetime]
     created_at: datetime
     updated_at: datetime
+    requires_restart: bool
 
     class Config:
         from_attributes = True

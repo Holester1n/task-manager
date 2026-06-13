@@ -34,7 +34,6 @@ def create_segment(system_id: int, segment: SegmentCreate, db: Session = Depends
         name=segment.name,
         system_id=system_id,
         description=segment.description,
-        requires_restart=segment.requires_restart
     )
     db.add(new_segment)
     db.commit()
@@ -82,7 +81,6 @@ def update_segment(system_id: int, segment_id: int, segment: SegmentCreate, db: 
         raise HTTPException(status_code=404, detail="Сегмент не найден")
     db_segment.name = segment.name
     db_segment.description = segment.description
-    db_segment.requires_restart = segment.requires_restart
     db.commit()
     db.refresh(db_segment)
     return db_segment

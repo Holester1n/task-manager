@@ -43,8 +43,8 @@ export const deleteSystem = async (id: number): Promise<void> => {
   await client.delete(`/systems/${id}`)
 }
 
-export const updateSegment = async (system_id: number, segment_id: number, name: string, description?: string, requires_restart?: boolean): Promise<Segment> => {
-  const response = await client.patch(`/systems/${system_id}/segments/${segment_id}`, { name, system_id, description, requires_restart })
+export const updateSegment = async (system_id: number, segment_id: number, name: string, description?: string): Promise<Segment> => {
+  const response = await client.patch(`/systems/${system_id}/segments/${segment_id}`, { name, system_id, description})
   return response.data
 }
 

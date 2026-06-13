@@ -17,6 +17,7 @@ export const createChange = async (data: {
   segment_id?: number
   responsible_id: number
   planned_at?: string
+  requires_restart?: boolean
 }): Promise<Change> => {
   const response = await client.post("/changes/", data)
   return response.data
@@ -29,6 +30,7 @@ export const updateChange = async (id: number, data: {
   segment_id?: number
   responsible_id?: number
   planned_at?: string
+  requires_restart?: boolean
 }): Promise<Change> => {
   const response = await client.patch(`/changes/${id}`, data)
   return response.data
