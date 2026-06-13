@@ -15,20 +15,29 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
 
-class UserRole(str, Enum):
-    admin = "admin"
-    user = "user"
+class RoleResponse(BaseModel):
+    id: int
+    name: str
+
+    class Config:
+        from_attributes = True
 
 class UserResponse(BaseModel):
     id: int
     name: str
     email: str
     telegram_chat_id: Optional[str] = None
-    role: UserRole
+    role: Optional[RoleResponse] = None
     created_at: datetime
 
     class Config:
         from_attributes = True
+
+class RoleCreate(BaseModel):
+    name: str
+
+class RoleSystemAccessUpdate(BaseModel):
+    system_ids: list[int]
 
 class Token(BaseModel):
     access_token: str

@@ -6,6 +6,8 @@ import NewChangePage from "./pages/NewChangePage"
 import SystemsPage from "./pages/SystemsPage"
 import ProfilePage from "./pages/ProfilePage"
 import RegisterPage from "./pages/RegisterPage"
+import RolesPage from "./pages/RolesPage"
+import UsersPage from "./pages/UsersPage"
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const token = localStorage.getItem("token")
@@ -27,6 +29,8 @@ function App() {
         <Route path="/changes/new" element={<PrivateRoute><NewChangePage /></PrivateRoute>} />
         <Route path="/systems" element={<PrivateRoute><SystemsPage /></PrivateRoute>} />
         <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+        <Route path="/roles" element={<PrivateRoute><RolesPage /></PrivateRoute>} />
+        <Route path="/users" element={<PrivateRoute><UsersPage /></PrivateRoute>} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>

@@ -21,7 +21,7 @@ export default function ProfilePage() {
   }, [])
 
   useEffect(() => {
-    if (user?.role === "admin") {
+    if (user?.role?.name === "admin") {
       getUsers().then(setUsers)
     }
   }, [user])
@@ -78,8 +78,8 @@ export default function ProfilePage() {
             <p className="mt-1"><span className="text-gray-400">Email:</span> {user.email}</p>
             <p className="mt-1">
               <span className="text-gray-400">Роль:</span>{" "}
-              <span className={user.role === "admin" ? "text-yellow-400" : "text-gray-300"}>
-                {user.role === "admin" ? "👑 Админ" : "Пользователь"}
+              <span className={user.role?.name === "admin" ? "text-yellow-400" : "text-gray-300"}>
+                {user.role?.name === "admin" ? "👑 Админ" : user.role?.name ?? "Пользователь"}
               </span>
             </p>
             <p className="mt-1">
@@ -130,27 +130,6 @@ export default function ProfilePage() {
           ))}
         </div>
 
-        {user?.role === "admin" && (
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-            <h3 className="font-semibold mb-4">👑 Управление пользователями</h3>
-            {users.map((u) => (
-              <div key={u.id} className="flex justify-between items-center py-2 border-b border-gray-800 last:border-0">
-                <div>
-                  <p className="text-sm">{u.name}</p>
-                  <p className="text-xs text-gray-400">{u.email}</p>
-                </div>
-                <select
-                  value={u.role}
-                  onChange={(e) => handleRoleChange(u.id, e.target.value)}
-                  className="bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-1.5 text-sm outline-none"
-                >
-                  <option value="user">Пользователь</option>
-                  <option value="admin">Админ</option>
-                </select>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
     </div>
   )

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from database import engine, SessionLocal
-from models import Base, User, UserRole
+from models import Base, User, Role
 from routers import users, systems, changes, subscriptions
 from auth import hash_password
 from contextlib import asynccontextmanager
@@ -14,7 +14,15 @@ Base.metadata.create_all(bind=engine)
 async def lifespan(app: FastAPI):
     db = SessionLocal()
     try:
-        existing_admin = db.query(User).filter(User.role == UserRole.admin).first()
+        admin_role = db.query(Role).filter(Role.name == "admin").first()
+        if not admin_role:
+            admin_role = Role(name="admin")
+            db.add(admin_role)
+            db.commit()
+            db.refresh(admin_role)
+            print("[startup] Роль admin создана")
+
+        existing_admin = db.query(User).filter(User.role_id == admin_role.id).first()
         if not existing_admin:
             email = os.getenv("ADMIN_EMAIL", "admin@admin.com")
             password = os.getenv("ADMIN_PASSWORD", "admin")
@@ -23,7 +31,7 @@ async def lifespan(app: FastAPI):
                 name=name,
                 email=email,
                 password_hash=hash_password(password),
-                role=UserRole.admin
+                role_id=admin_role.id
             )
             db.add(admin)
             db.commit()
@@ -33,7 +41,7 @@ async def lifespan(app: FastAPI):
     finally:
         db.close()
 
-    yield  
+    yield
 
 app = FastAPI(title="Change Tracker API", lifespan=lifespan)
 

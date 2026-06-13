@@ -12,9 +12,17 @@ class ChangeStatus(enum.Enum):
     tested = "tested"
     rolled_back = "rolled_back"
 
-class UserRole(enum.Enum):
-    admin = "admin"
-    user = "user"
+class Role(Base):
+    __tablename__ = "roles"
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False, unique=True)
+    users = relationship("User", back_populates="role")
+    systems = relationship("System", secondary="role_system_access", back_populates="roles")
+
+class RoleSystemAccess(Base):
+    __tablename__ = "role_system_access"
+    role_id = Column(Integer, ForeignKey("roles.id"), primary_key=True)
+    system_id = Column(Integer, ForeignKey("systems.id"), primary_key=True)
 
 class User(Base):
     __tablename__ = "users"
@@ -23,7 +31,8 @@ class User(Base):
     email = Column(String(200), unique=True, nullable=False)
     password_hash = Column(String(200), nullable=False)
     telegram_chat_id = Column(String(50), nullable=True)
-    role = Column(Enum(UserRole), default=UserRole.user, nullable=False)
+    role_id = Column(Integer, ForeignKey("roles.id"), nullable=True)
+    role = relationship("Role", back_populates="users")
     created_at = Column(DateTime, default=datetime.utcnow)
 
 class System(Base):
@@ -32,6 +41,7 @@ class System(Base):
     name = Column(String(100), nullable=False)
     description = Column(Text)
     segments = relationship("Segment", back_populates="system")
+    roles = relationship("Role", secondary="role_system_access", back_populates="systems")
 
 class Change(Base):
     __tablename__ = "changes"

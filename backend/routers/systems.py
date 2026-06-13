@@ -1,14 +1,25 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import get_db
-from models import System, Segment
+from routers.users import get_current_user, is_admin
+from models import User, System, Segment, RoleSystemAccess
 from schemas import SystemCreate, SystemResponse, SegmentCreate, SegmentResponse
 
 router = APIRouter(prefix="/systems", tags=["systems"])
 
 @router.get("/", response_model=list[SystemResponse])
-def get_systems(db: Session = Depends(get_db)):
-    return db.query(System).all()
+def get_systems(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if is_admin(current_user):
+        return db.query(System).all()
+    
+    if current_user.role_id is None:
+        return []
+    
+    accessible_ids = db.query(RoleSystemAccess.system_id).filter(
+        RoleSystemAccess.role_id == current_user.role_id
+    ).all()
+    ids = [row[0] for row in accessible_ids]
+    return db.query(System).filter(System.id.in_(ids)).all()
 
 @router.post("/", response_model=SystemResponse)
 def create_system(system: SystemCreate, db: Session = Depends(get_db)):

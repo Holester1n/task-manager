@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { getChanges, deleteChange, updateChange } from "../api/changes"
 import { getSystems } from "../api/systems"
 import type { Change, ChangeStatus, System } from "../types"
+import { useCurrentUser } from "../hooks/useCurrentUser"
 
 const STATUS_LABELS: Record<ChangeStatus, string> = {
   created: "Создано",
@@ -27,6 +28,9 @@ export default function ChangesPage() {
   const [filterSystem, setFilterSystem] = useState<number | "">("")
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
+
+  const currentUser = useCurrentUser()
+  const isAdmin = currentUser?.role?.name === "admin"
 
   useEffect(() => {
     getSystems().then(setSystems)
@@ -71,6 +75,12 @@ export default function ChangesPage() {
           <h1 className="text-2xl font-bold">Изменения</h1>
           <div className="flex gap-2">
             <button onClick={() => navigate("/systems")} className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm transition">Системы</button>
+            {isAdmin && (
+              <button onClick={() => navigate("/roles")} className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm transition">Роли</button>
+            )}
+            {isAdmin && (
+              <button onClick={() => navigate("/users")} className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm transition">Пользователи</button>
+            )}
             <button onClick={() => navigate("/profile")} className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm transition">Профиль</button>
             <button onClick={() => navigate("/changes/new")} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium transition">+ Добавить</button>
             <button onClick={() => { localStorage.removeItem("token"); navigate("/login") }} className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm transition">Выйти</button>
