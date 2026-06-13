@@ -17,6 +17,8 @@ STATUS_LABELS = {
     "rolled_back": "Откатили",
 }
 
+from notifications import format_change_message, format_change_email, notify, notify_email
+
 def notify_responsible(db: Session, change: Change, action: str):
     system = db.query(System).filter(System.id == change.system_id).first()
     system_name = system.name if system else "Неизвестно"
@@ -29,7 +31,7 @@ def notify_responsible(db: Session, change: Change, action: str):
 
     for sub in subscriptions:
         user = db.query(User).filter(User.id == sub.user_id).first()
-        if user and user.telegram_chat_id and user.id not in notified_ids:
+        if user and user.id not in notified_ids:
             message = format_change_message(
                 action=action,
                 title=change.title,
@@ -37,11 +39,20 @@ def notify_responsible(db: Session, change: Change, action: str):
                 responsible=user.name,
                 system=system_name
             )
-            notify(user.telegram_chat_id, message)
+            if user.telegram_chat_id:
+                notify(user.telegram_chat_id, message)
+            subject, body = format_change_email(
+                action=action,
+                title=change.title,
+                status=STATUS_LABELS.get(change.status.value, change.status.value),
+                responsible=user.name,
+                system=system_name
+            )
+            notify_email(user.email, subject, body)
             notified_ids.add(user.id)
 
     responsible = db.query(User).filter(User.id == change.responsible_id).first()
-    if responsible and responsible.telegram_chat_id and responsible.id not in notified_ids:
+    if responsible and responsible.id not in notified_ids:
         message = format_change_message(
             action=action,
             title=change.title,
@@ -49,7 +60,16 @@ def notify_responsible(db: Session, change: Change, action: str):
             responsible=responsible.name,
             system=system_name
         )
-        notify(responsible.telegram_chat_id, message)
+        if responsible.telegram_chat_id:
+            notify(responsible.telegram_chat_id, message)
+        subject, body = format_change_email(
+            action=action,
+            title=change.title,
+            status=STATUS_LABELS.get(change.status.value, change.status.value),
+            responsible=responsible.name,
+            system=system_name
+        )
+        notify_email(responsible.email, subject, body)
 
 
 @router.get("/", response_model=list[ChangeResponse])
