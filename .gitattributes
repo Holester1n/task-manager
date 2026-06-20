@@ -1,0 +1,5 @@
+mobile/task_app/windows/** linguist-vendored
+mobile/task_app/linux/** linguist-vendored
+mobile/task_app/macos/** linguist-vendored
+mobile/task_app/ios/** linguist-vendored
+mobile/task_app/android/** linguist-vendored
