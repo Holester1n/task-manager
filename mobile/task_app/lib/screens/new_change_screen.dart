@@ -153,7 +153,7 @@ class _NewChangeScreenState extends ConsumerState<NewChangeScreen> {
               loading: () => const CircularProgressIndicator(),
               error: (e, _) => Text('Ошибка загрузки систем: $e'),
               data: (systems) => DropdownButtonFormField<System>(
-                value: _selectedSystem,
+                initialValue: _selectedSystem,
                 decoration: const InputDecoration(
                   labelText: 'Система *',
                   border: OutlineInputBorder(),
@@ -173,7 +173,7 @@ class _NewChangeScreenState extends ConsumerState<NewChangeScreen> {
               _loadingSegments
                   ? const CircularProgressIndicator()
                   : DropdownButtonFormField<Segment?>(
-                      value: _selectedSegment,
+                      initialValue: _selectedSegment,
                       decoration: const InputDecoration(
                         labelText: 'Сегмент',
                         border: OutlineInputBorder(),
@@ -193,7 +193,7 @@ class _NewChangeScreenState extends ConsumerState<NewChangeScreen> {
               loading: () => const CircularProgressIndicator(),
               error: (e, _) => Text('Ошибка загрузки пользователей: $e'),
               data: (users) => DropdownButtonFormField<User>(
-                value: _selectedResponsible,
+                initialValue: _selectedResponsible,
                 decoration: const InputDecoration(
                   labelText: 'Ответственный *',
                   border: OutlineInputBorder(),

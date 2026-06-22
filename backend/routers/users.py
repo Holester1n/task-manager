@@ -77,8 +77,6 @@ def connect_telegram(chat_id: str, current_user: User = Depends(get_current_user
     db.commit()
     return {"message": "Telegram подключён"}
 
-# --- Роли ---
-
 @router.get("/roles/", response_model=list[RoleResponse])
 def get_roles(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     return db.query(Role).all()
@@ -118,3 +116,9 @@ def set_role_systems(role_id: int, data: RoleSystemAccessUpdate, current_user: U
         db.add(RoleSystemAccess(role_id=role_id, system_id=system_id))
     db.commit()
     return {"message": "Доступ обновлён"}
+
+@router.get("/roles/{role_id}/systems")
+def get_role_systems(role_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from models import RoleSystemAccess
+    accesses = db.query(RoleSystemAccess).filter(RoleSystemAccess.role_id == role_id).all()
+    return {"system_ids": [a.system_id for a in accesses]}

@@ -142,7 +142,7 @@ class _ChangeDetailScreenState extends ConsumerState<ChangeDetailScreen> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              value: _status,
+              initialValue: _status,
               decoration: const InputDecoration(
                 labelText: 'Статус',
                 border: OutlineInputBorder(),

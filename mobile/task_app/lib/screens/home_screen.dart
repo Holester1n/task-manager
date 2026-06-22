@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
 import 'changes_screen.dart';
 import 'systems_screen.dart';
+import 'profile_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -14,10 +15,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _index = 0;
 
-  final _screens = const [
-    ChangesScreen(),
-    SystemsScreen(),
-  ];
+  final _screens = const [ChangesScreen(), SystemsScreen(), ProfileScreen()];
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +36,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         destinations: const [
           NavigationDestination(icon: Icon(Icons.list_alt), label: 'Изменения'),
           NavigationDestination(icon: Icon(Icons.computer), label: 'Системы'),
+          NavigationDestination(icon: Icon(Icons.person), label: 'Профиль'),
         ],
       ),
     );

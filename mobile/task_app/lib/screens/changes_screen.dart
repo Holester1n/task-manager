@@ -79,7 +79,7 @@ class _ChangesScreenState extends ConsumerState<ChangesScreen> {
                 children: [
                   Expanded(
                     child: DropdownButtonFormField<String?>(
-                      value: _selectedStatus,
+                      initialValue: _selectedStatus,
                       isExpanded: true,
                       decoration: const InputDecoration(
                         labelText: 'Статус',
@@ -107,7 +107,7 @@ class _ChangesScreenState extends ConsumerState<ChangesScreen> {
                       data: (systems) => ButtonTheme(
                         alignedDropdown: true,
                         child: DropdownButtonFormField<System?>(
-                          value: _selectedSystem,
+                          initialValue: _selectedSystem,
                           isExpanded: true,
                           decoration: const InputDecoration(
                             labelText: 'Система',

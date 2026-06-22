@@ -25,6 +25,8 @@ class MyApp extends ConsumerWidget {
 
     if (auth.user != null) {
       Future.microtask(() => _router.go('/home'));
+    } else {
+      Future.microtask(() => _router.go('/'));
     }
 
     return MaterialApp.router(
