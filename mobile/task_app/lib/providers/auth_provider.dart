@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user.dart';
 import '../services/auth_service.dart';
+import '../core/secure_storage.dart';
+import '../core/api_client.dart';
 
 class AuthState {
   final User? user;
@@ -25,11 +27,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> _init() async {
+    final savedUrl = await SecureStorage.getServerUrl();
+    if (savedUrl != null) {
+      ApiClient.baseUrl = savedUrl;
+    }
     try {
       final user = await _service.getMe();
       state = state.copyWith(user: user);
-    } catch (_) {
-    }
+    } catch (_) {}
   }
 
   Future<void> login(String username, String password) async {

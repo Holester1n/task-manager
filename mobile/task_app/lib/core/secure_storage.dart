@@ -12,4 +12,12 @@ class SecureStorage {
 
   static Future<void> deleteToken() =>
       _storage.delete(key: _tokenKey);
+
+  static const _serverUrlKey = 'server_url';
+
+  static Future<void> saveServerUrl(String url) =>
+      _storage.write(key: _serverUrlKey, value: url);
+
+  static Future<String?> getServerUrl() =>
+      _storage.read(key: _serverUrlKey);
 }
