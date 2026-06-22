@@ -240,7 +240,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
               ),
             ],
-
+            const SizedBox(height: 16),
+            OutlinedButton.icon(
+              onPressed: () => ref.read(authProvider.notifier).logout(),
+              icon: const Icon(Icons.logout, color: Colors.red),
+              label: const Text('Выйти', style: TextStyle(color: Colors.red)),
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: Colors.red),
+              ),
+            ),
           ],
         ),
       ),
