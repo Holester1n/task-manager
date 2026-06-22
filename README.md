@@ -6,6 +6,7 @@
 
 **Бэкенд:** Python + FastAPI + SQLAlchemy + PostgreSQL  
 **Фронтенд:** React + TypeScript (Vite) + TailwindCSS — PWA  
+**Мобильное приложение:** Flutter (Android)  
 **Уведомления:** Telegram Bot  
 **Миграции БД:** Alembic  
 **Документация API:** OpenAPI / Swagger (автогенерация)
@@ -22,11 +23,12 @@
 - Подписки на системы — получай уведомления только по нужным
 - Telegram уведомления при создании и обновлении изменений
 - REST API с автодокументацией
+- Мобильное приложение на Flutter с полным доступом к функциональности
 
 ## Структура проекта
 
 ```
-change-tracker/
+task-manager/
 ├── frontend/          # React + TypeScript (Vite)
 │   └── src/
 │       ├── api/       # Функции для запросов к API
@@ -34,15 +36,24 @@ change-tracker/
 │       ├── hooks/     # Кастомные React хуки
 │       ├── pages/     # Страницы приложения
 │       └── types/     # TypeScript типы
-└── backend/           # Python + FastAPI
-    ├── routers/       # Эндпоинты API
-    ├── migrations/    # Миграции базы данных (Alembic)
-    ├── models.py      # Модели БД (SQLAlchemy)
-    ├── schemas.py     # Схемы запросов/ответов (Pydantic)
-    ├── database.py    # Подключение к БД
-    ├── auth.py        # JWT авторизация
-    ├── notifications.py # Telegram уведомления
-    └── bot.py         # Telegram бот
+├── backend/           # Python + FastAPI
+│   ├── routers/       # Эндпоинты API
+│   ├── migrations/    # Миграции базы данных (Alembic)
+│   ├── models.py      # Модели БД (SQLAlchemy)
+│   ├── schemas.py     # Схемы запросов/ответов (Pydantic)
+│   ├── database.py    # Подключение к БД
+│   ├── auth.py        # JWT авторизация
+│   ├── notifications.py # Telegram уведомления
+│   └── bot.py         # Telegram бот
+├── mobile/
+│   └──task_app/      # Flutter приложение
+│       ├── lib/
+│       ├── core/        # ApiClient, SecureStorage
+│       ├── models/      # Dart модели (User, Change, System, Segment)
+│       ├── services/    # AuthService, ChangesService, SystemsService, UsersService
+│       ├── providers/   # Riverpod провайдеры
+│       ├── screens/     # Экраны приложения
+│       ├── main.dart
 ```
 
 ## Установка и запуск
@@ -51,6 +62,8 @@ change-tracker/
 - Python 3.11+
 - Node.js 18+
 - PostgreSQL 14+
+- Flutter SDK 3.x+
+- Android SDK (для мобильного приложения)
 
 ### Бэкенд
 
@@ -69,7 +82,7 @@ pip install -r requirements.txt
 Создайте файл `backend/.env`:
 ```
 DATABASE_URL=postgresql://postgres:ПАРОЛЬ@localhost:5432/ИМЯ_БД
-SECRET_KEY=придумай_длинную_случайную_строку
+SECRET_KEY=придумайте_длинную_случайную_строку
 TELEGRAM_BOT_TOKEN=токен_от_botfather
 ```
 
@@ -85,9 +98,9 @@ CREATE DATABASE changetracker;
 alembic upgrade head
 ```
 
-Запуск бэкенда:
+Запуск бэкенда (обязательно с `--host 0.0.0.0` если нужен доступ с мобильного устройства):
 ```bash
-uvicorn main:app --reload
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 Swagger документация: `http://localhost:8000/docs`
@@ -106,6 +119,52 @@ npm run dev
 ```
 
 Откройте `http://localhost:5173`
+
+### Мобильное приложение
+
+#### Требования
+- Flutter SDK 3.x ([flutter.dev](https://flutter.dev))
+- Android Studio или подключённое Android-устройство с включённым режимом разработчика
+- Включённый Developer Mode в Windows (Параметры → Для разработчиков)
+- Телефон и компьютер в одной Wi-Fi сети
+
+#### Настройка
+
+1. Узнайте локальный IP компьютера:
+```bash
+ipconfig  # Windows
+```
+Ищите IPv4-адрес Wi-Fi адаптера (например `192.168.1.105`).
+
+2. Укажите IP в `mobile/task_app/lib/core/api_client.dart`:
+```dart
+static const baseUrl = 'http://192.168.x.x:8000';
+```
+
+3. Убедитесь что бэкенд запущен с `--host 0.0.0.0`.
+
+#### Запуск
+
+```bash
+cd mobile/task_app
+flutter pub get
+flutter run
+```
+
+После первой установки APK используйте горячую перезагрузку:
+- `r` — hot reload (патчит код, состояние сохраняется)
+- `R` — hot restart (перезапуск без переустановки APK)
+
+#### Функциональность мобильного приложения
+
+- Авторизация по email и паролю, автовход по сохранённому токену
+- Список изменений с фильтрацией по статусу и системе
+- Создание изменения с выбором системы, сегмента, ответственного и даты
+- Редактирование изменения: название, описание, статус
+- Удаление изменения с подтверждением
+- Список систем с созданием, редактированием и удалением
+- Управление сегментами внутри системы
+- Выход из аккаунта
 
 ## Миграции базы данных
 
@@ -128,12 +187,11 @@ alembic upgrade head
 
 ## Первый администратор
 
-После регистрации первого пользователя назначьте его администратором вручную:
-```bash
-psql -U postgres -d ИМЯ_БД
-UPDATE users SET role = 'admin' WHERE email = 'ваш@email.com';
-\q
-```
+Дефолтный администратор создаётся автоматически при первом запуске бэкенда. Данные берутся из `.env`:
+
+ADMIN_EMAIL=admin@admin.com
+ADMIN_PASSWORD=admin
+ADMIN_NAME=Admin
 
 Далее управление ролями доступно через интерфейс в разделе Профиль.
 
@@ -159,7 +217,7 @@ UPDATE users SET role = 'admin' WHERE email = 'ваш@email.com';
 | DELETE | `/systems/{id}/segments/{id}` | Удалить сегмент |
 | GET | `/changes/` | Список изменений |
 | POST | `/changes/` | Создать изменение |
-| PATCH | `/changes/{id}` | Обновить статус |
+| PATCH | `/changes/{id}` | Обновить изменение |
 | DELETE | `/changes/{id}` | Удалить изменение |
 | GET | `/subscriptions/` | Мои подписки |
 | POST | `/subscriptions/{system_id}` | Подписаться на систему |
