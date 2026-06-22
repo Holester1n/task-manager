@@ -14,6 +14,10 @@ class ChangesService {
     return (response.data as List).map((e) => Change.fromJson(e)).toList();
   }
 
+  Future<void> updateStatus(int id, String status) async {
+    await _dio.patch('/changes/$id', data: {'status': status});
+  }
+
   Future<void> deleteChange(int id) async {
     await _dio.delete('/changes/$id');
   }

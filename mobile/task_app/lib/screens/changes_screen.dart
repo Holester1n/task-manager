@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/changes_provider.dart';
+import 'new_change_screen.dart';
+import 'change_detail_screen.dart';
+
 
 const _statusLabels = {
   'created': 'Создано',
@@ -67,13 +70,18 @@ class ChangesScreen extends ConsumerWidget {
                               leading: change.requiresRestart
                                   ? const Icon(Icons.warning_amber, color: Colors.orange)
                                   : const Icon(Icons.check_circle_outline, color: Colors.grey),
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(builder: (_) => ChangeDetailScreen(change: change)),
+                              ),
                             ),
                           );
                         },
                       ),
                     ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {}, // NewChangeScreen — потом
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const NewChangeScreen()),
+        ),
         child: const Icon(Icons.add),
       ),
     );

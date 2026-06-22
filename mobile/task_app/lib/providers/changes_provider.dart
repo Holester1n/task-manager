@@ -42,6 +42,11 @@ class ChangesNotifier extends StateNotifier<ChangesState> {
     await _service.deleteChange(id);
     await load();
   }
+
+  Future<void> updateStatus(int id, String status) async {
+  await _service.updateStatus(id, status);
+  await load();
+  }
 }
 
 final changesProvider = StateNotifierProvider<ChangesNotifier, ChangesState>(
