@@ -1,14 +1,23 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { login } from "../api/auth"
+import client from "../api/client"
 
 export default function LoginPage() {
+  const [serverUrl, setServerUrl] = useState(() => localStorage.getItem("serverUrl") || "")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const navigate = useNavigate()
 
   const handleSubmit = async () => {
+    if (!serverUrl) {
+      setError("Введите адрес сервера")
+      return
+    }
+    localStorage.setItem("serverUrl", serverUrl)
+    client.defaults.baseURL = serverUrl
+
     try {
       const token = await login(email, password)
       localStorage.setItem("token", token.access_token)
@@ -31,6 +40,13 @@ export default function LoginPage() {
         )}
 
         <div className="flex flex-col gap-4">
+          <input
+            type="url"
+            placeholder="Адрес сервера (http://...)"
+            value={serverUrl}
+            onChange={(e) => setServerUrl(e.target.value)}
+            className="bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-3 outline-none focus:border-blue-500 transition"
+          />
           <input
             type="email"
             placeholder="Email"

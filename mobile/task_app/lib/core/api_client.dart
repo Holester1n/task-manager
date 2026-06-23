@@ -4,7 +4,7 @@ import 'secure_storage.dart';
 class ApiClient {
   static String baseUrl = const String.fromEnvironment(
     'API_URL',
-    defaultValue: 'http://192.168.0.101:8000',
+    defaultValue: '',
   );
 
   static Dio create() {

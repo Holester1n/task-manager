@@ -15,6 +15,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _serverCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
+  final _nameCtrl = TextEditingController(); 
+  bool _isRegister = false; 
 
   @override
   void initState() {
@@ -35,6 +37,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     _serverCtrl.dispose();
     _emailCtrl.dispose();
     _passwordCtrl.dispose();
+    _nameCtrl.dispose();
     super.dispose();
   }
 
@@ -99,6 +102,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 onSubmitted: (_) => _submit(),
               ),
               const SizedBox(height: 8),
+              if (_isRegister) ...[
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _nameCtrl,
+                  decoration: const InputDecoration(
+                    labelText: 'Имя',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ],
               if (auth.error != null)
                 Text(
                   auth.error!,
@@ -114,7 +127,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         width: 20,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('Войти'),
+                    : Text(_isRegister ? 'Зарегистрироваться' : 'Войти'),
+              ),
+              TextButton(
+                onPressed: () => setState(() => _isRegister = !_isRegister),
+                child: Text(_isRegister ? 'Уже есть аккаунт? Войти' : 'Нет аккаунта? Зарегистрироваться'),
               ),
             ],
           ),

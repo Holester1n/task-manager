@@ -19,9 +19,17 @@ class AuthService {
     return await getMe();
   }
 
+  Future<User> register(String name, String email, String password) async {
+    await _dio.post('/users/register', data: {
+      'name': name,
+      'email': email,
+      'password': password,
+    });
+    return await login(email, password);
+  }
+
   Future<User> getMe() async {
     final response = await _dio.get('/users/me');
-    print('ME RESPONSE: ${response.data}');
     return User.fromJson(response.data);
   }
 
