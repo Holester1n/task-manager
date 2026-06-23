@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { getChanges, deleteChange, updateChange } from "../api/changes"
 import { getSystems } from "../api/systems"
 import type { Change, ChangeStatus, System } from "../types"
@@ -32,13 +32,15 @@ export default function ChangesPage() {
   const currentUser = useCurrentUser()
   const isAdmin = currentUser?.role?.name === "admin"
 
+  const location = useLocation()
+
   useEffect(() => {
     getSystems().then(setSystems)
   }, [])
 
   useEffect(() => {
     loadChanges()
-  }, [filterStatus, filterSystem])
+  }, [filterStatus, filterSystem, location.key])
 
   const loadChanges = async () => {
     setLoading(true)

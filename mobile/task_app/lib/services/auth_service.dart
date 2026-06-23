@@ -4,7 +4,7 @@ import '../core/secure_storage.dart';
 import '../models/user.dart';
 
 class AuthService {
-  final Dio _dio = ApiClient.create();
+  Dio get _dio => ApiClient.create();
 
   Future<User> login(String email, String password) async {
     final response = await _dio.post('/users/login', data: {
