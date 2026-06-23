@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { getChanges, deleteChange, updateChange } from "../api/changes"
 import { getSystems } from "../api/systems"
@@ -42,7 +42,7 @@ export default function ChangesPage() {
     loadChanges()
   }, [filterStatus, filterSystem, location.key])
 
-  const loadChanges = async () => {
+  const loadChanges = useCallback(async () => {
     setLoading(true)
     try {
       const data = await getChanges({
@@ -55,7 +55,7 @@ export default function ChangesPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [filterStatus, filterSystem])
 
   const handleStatusChange = async (id: number, status: ChangeStatus) => {
     await updateChange(id, { status })
