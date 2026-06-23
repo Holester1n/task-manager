@@ -45,6 +45,10 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Change Tracker API", lifespan=lifespan)
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://192.168.0.101:5173", "http://192.168.0.101:8000"],
