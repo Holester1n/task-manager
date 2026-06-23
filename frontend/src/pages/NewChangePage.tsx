@@ -50,8 +50,10 @@ export default function NewChangePage() {
           planned_at: plannedAt || undefined,
           requires_restart: requiresRestart
         })
+        console.log("success, navigating")
         navigate("/changes")
-      } catch {
+      } catch (e) {
+        console.log("error", e)
         setError("Ошибка при создании")
         setSubmitting(false)
       }
