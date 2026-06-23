@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy.orm import Session
 from database import get_db
 from models import Change, ChangeStatus, User, System, Subscription
@@ -89,12 +89,12 @@ def get_changes(
     return query.all()
 
 @router.post("/", response_model=ChangeResponse)
-def create_change(change: ChangeCreate, db: Session = Depends(get_db)):
+def create_change(change: ChangeCreate, db: Session = Depends(get_db), background_tasks: BackgroundTasks = BackgroundTasks()):
     new_change = Change(**change.model_dump())
     db.add(new_change)
     db.commit()
     db.refresh(new_change)
-    notify_responsible(db, new_change, "создано")
+    background_tasks.add_task(notify_responsible, db, new_change, "создано")
     return new_change
 
 @router.get("/{change_id}", response_model=ChangeResponse)
@@ -105,7 +105,7 @@ def get_change(change_id: int, db: Session = Depends(get_db)):
     return change
 
 @router.patch("/{change_id}", response_model=ChangeResponse)
-def update_change(change_id: int, data: ChangeUpdate, db: Session = Depends(get_db)):
+def update_change(change_id: int, data: ChangeUpdate, db: Session = Depends(get_db), background_tasks: BackgroundTasks = BackgroundTasks()):
     change = db.query(Change).filter(Change.id == change_id).first()
     if not change:
         raise HTTPException(status_code=404, detail="Изменение не найдено")
@@ -116,7 +116,7 @@ def update_change(change_id: int, data: ChangeUpdate, db: Session = Depends(get_
     change.updated_at = datetime.utcnow()
     db.commit()
     db.refresh(change)
-    notify_responsible(db, change, "обновлено")
+    background_tasks.add_task(notify_responsible, db, change, "обновлено")
     return change
 
 @router.delete("/{change_id}")
