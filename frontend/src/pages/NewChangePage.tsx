@@ -14,6 +14,7 @@ export default function NewChangePage() {
   const [systems, setSystems] = useState<System[]>([])
   const [segments, setSegments] = useState<Segment[]>([])
   const [error, setError] = useState("")
+  const [submitting, setSubmitting] = useState(false)
   const [requiresRestart, setRequiresRestart] = useState(false)
   const navigate = useNavigate()
   const currentUser = useCurrentUser()
@@ -31,28 +32,30 @@ export default function NewChangePage() {
     }
   }, [systemId])
 
-  const handleSubmit = async () => {
-    if (!title || !systemId) {
-      setError("Заполните название и систему")
-      return
-    }
+    const handleSubmit = async () => {
+      if (!title || !systemId) {
+        setError("Заполните название и систему")
+        return
+      }
+      if (submitting) return
+      setSubmitting(true)
 
-    try {
-      await createChange({
-        title,
-        description: description || undefined,
-        system_id: systemId,
-        segment_id: segmentId || undefined,
-        responsible_id: 1,
-        planned_at: plannedAt || undefined,
-        requires_restart: requiresRestart
-      })
-
-      navigate("/changes")
-    } catch {
-      setError("Ошибка при создании")
+      try {
+        await createChange({
+          title,
+          description: description || undefined,
+          system_id: systemId,
+          segment_id: segmentId || undefined,
+          responsible_id: 1,
+          planned_at: plannedAt || undefined,
+          requires_restart: requiresRestart
+        })
+        navigate("/changes")
+      } catch {
+        setError("Ошибка при создании")
+        setSubmitting(false)
+      }
     }
-  }
 
   return (
     <div className="min-h-screen bg-gray-950 text-white">
@@ -156,9 +159,10 @@ export default function NewChangePage() {
             <div className="flex gap-3 pt-2">
               <button
                 onClick={handleSubmit}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium transition"
+                disabled={submitting}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 rounded-lg text-sm font-medium transition"
               >
-                Создать изменение
+                {submitting ? "Создание..." : "Создать изменение"}
               </button>
 
               <button

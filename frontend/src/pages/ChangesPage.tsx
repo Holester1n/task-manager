@@ -58,8 +58,8 @@ export default function ChangesPage() {
   }, [filterStatus, filterSystem])
 
   const handleStatusChange = async (id: number, status: ChangeStatus) => {
+    setChanges(prev => prev.map(c => c.id === id ? { ...c, status } : c))
     await updateChange(id, { status })
-    loadChanges()
   }
 
   const handleDelete = async (id: number) => {
